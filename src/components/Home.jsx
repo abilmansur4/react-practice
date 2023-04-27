@@ -1,7 +1,12 @@
-import React from "react";
+import axios from "axios";
 
 const Home = () => {
-  return <h2>Home</h2>;
+
+  return (
+    <>
+      <h1>Home page</h1>
+    </>
+  )
 };
 
 export default Home;
