@@ -2,15 +2,17 @@ import { useState, createContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
+import SnackbarComponent from '../components/SnackbarComponent'
+
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
-  const fromPage = location.state?.from?.pathname || "/";
+  // const fromPage = location.state?.from?.pathname || "/";
 
   // useEffect(() => {
   //   axios.get("http://localhost:3001/login").then((response) => {
@@ -24,8 +26,13 @@ export const AuthProvider = ({ children }) => {
   //   });
   // });
 
+  const config = {
+    headers: {
+      "authorization" : "accessToken " + localStorage.getItem("accessToken")
+    }
+  }
+
   const login = (user, password) => {
-    
     axios
       .post("http://localhost:5000/api/auth", {
         username: user,
@@ -34,11 +41,12 @@ export const AuthProvider = ({ children }) => {
       .then((response) => {
         if (response.data) {
           console.log(response.data);
+          localStorage.setItem("userId", response.data.user.id);
           localStorage.setItem("accessToken", response.data.accessToken);
           localStorage.setItem("refreshToken", response.data.refreshToken);
           setAccessToken(localStorage.getItem("accessToken"));
           setRefreshToken(localStorage.getItem("refreshToken"));
-          navigate("/", { replace: true });
+          navigate("/cabinet", { replace: true });
         }
       })
       .catch((error) => {
@@ -47,19 +55,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    axios.post("http://localhost:5000/api/auth/logout")
+    axios.post("http://localhost:5000/api/auth/logout", config)
       .then((response) => {
       // console.log(response);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       setAccessToken(null);
       setRefreshToken(null);
-      navigate("/", { replace: true });
-      // if (response) {
-      //   console.log(response);
-      // }
+      navigate("/login", { replace: true });
+      
     });
     // cb();
+    // localStorage.removeItem("accessToken");
+    // localStorage.removeItem("refreshToken");
+    // setAccessToken(null);
+    // setRefreshToken(null);
   };
 
   const register = (username, password, email, phone, ruleAccept) => {
@@ -72,7 +82,7 @@ export const AuthProvider = ({ children }) => {
       roleId: [2],
       ruleAccept: ruleAccept
     })
-    .then((response) => {
+    .then((response) => { 
       if (response.data) {
         console.log(response.data);
         localStorage.setItem("accessToken", response.data.accessToken);
