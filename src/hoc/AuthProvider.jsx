@@ -1,14 +1,13 @@
-import { useState, createContext, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, createContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-import SnackbarComponent from '../components/SnackbarComponent'
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
   const navigate = useNavigate();
   // const location = useLocation();
 
@@ -44,9 +43,11 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem("userId", response.data.user.id);
           localStorage.setItem("accessToken", response.data.accessToken);
           localStorage.setItem("refreshToken", response.data.refreshToken);
+          localStorage.setItem("userRole", response.data.user.roles[0].id);
           setAccessToken(localStorage.getItem("accessToken"));
           setRefreshToken(localStorage.getItem("refreshToken"));
-          navigate("/cabinet", { replace: true });
+          setUserRole(localStorage.getItem("userRole"));
+          navigate("/main", { replace: true });
         }
       })
       .catch((error) => {
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }) => {
       email: email,
       phone: phone,
       positionId: 1,
-      roleId: [2],
+      roleId: [4],
       ruleAccept: ruleAccept
     })
     .then((response) => { 
@@ -97,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     });
   }
 
-  const value = { accessToken, refreshToken, login, logout, register };
+  const value = { accessToken, refreshToken, userRole, login, logout, register };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

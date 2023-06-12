@@ -20,7 +20,14 @@ const EditCabinet = () => {
   const [nameOrganization ,setNameOrganization] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
-  const [open, setOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center'
+  });
+
+  const { vertical, horizontal, open } = errorOpen;
 
   const config = {
     headers: {
@@ -57,23 +64,32 @@ const EditCabinet = () => {
   const fromPage = location.state?.from?.pathname || "/";
 
   const handleClick = () => {
-    setOpen(true);
+    setSuccessOpen(true);
   };
 
-  const handleClose = (event, reason) => {
+  const handleCloseSuccess = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    setOpen(false);
+    setSuccessOpen(false);
   };
 
+  const handleCloseError = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setErrorOpen({
+      open: false
+    });
+  };
 
   const update = async (user) => {
     await axios.put("http://localhost:5000/api/users/" + localStorage.userId, user, config)
       .then((response) => {
         if (response.status === 200) {
-          setOpen(true);
+          setSuccessOpen(true);
           setTimeout(() => {
             navigate("/cabinet")
           }, 1500);
@@ -84,7 +100,7 @@ const EditCabinet = () => {
 
 
   const handleSubmit = () => {
-    const tmp = [username, firstname, lastname, secondname, email, phone, iin, nameOrganization, password];
+    // const tmp = [username, firstname, lastname, secondname, email, phone, iin, nameOrganization, password];
     const user = {};
     if (username !== '') {
       user.username = username;
@@ -104,15 +120,26 @@ const EditCabinet = () => {
       user.nameOrganization = nameOrganization;
     } 
 
+    // console.log(password, passwordCheck);
+
     if (password !== passwordCheck) {
-      alert("Пароли не совпадают")
-    } else if(password === passwordCheck) {
-      if (password !== '') {
+      setErrorOpen({
+        open: true,
+        vertical: 'bottom',
+        horizontal: 'right'
+      });
+    } 
+    else if(password === passwordCheck) {
+      if (password) {
+        // console.log("password changed")
         user.password = password
+        update(user);
+      } else {
+        update(user);
       }
     }
     
-    update(user);
+    
   };
 
   return (
@@ -128,10 +155,11 @@ const EditCabinet = () => {
           <TextField className="txtField" label="ИИН" value={iin || ''} variant="standard" type="text" onChange={(e) => setIin(e.target.value)}/>
           <TextField className="txtField" id="standard-helperText2" helperText="*Необязательно" label="Название организации" value={nameOrganization || ''} variant="standard" type="text" onChange={(e) => setNameOrganization(e.target.value)}/>
           <Typography variant="subtitle1">Изменить пароль</Typography>
-          <TextField className="txtField" label="Пароль" value={password} variant="standard" type="password" onChange={(e) => setPassword(e.target.value)}/>
-          <TextField className="txtField" label="Повторите пароль" value={passwordCheck} variant="standard" type="password" onChange={(e) => setPasswordCheck(e.target.value)}/>
+          <TextField className="txtField" label="Пароль" variant="standard" type="password" onChange={(e) => setPassword(e.target.value)}/>
+          <TextField className="txtField" label="Повторите пароль" variant="standard" type="password" onChange={(e) => setPasswordCheck(e.target.value)}/>
           <Button type="submit" variant="contained" onClick={handleSubmit}>Сохранить</Button>
-          <SnackbarComponent open={open} onClose={handleClose} severity="success" message="Данные успешно сохранены!"  />
+          <SnackbarComponent open={successOpen} onClose={handleCloseSuccess} severity="success" message="Данные успешно сохранены!"  />
+          <SnackbarComponent key={vertical + horizontal} anchorOrigin={{ vertical, horizontal }} open={open} onClose={handleCloseError} severity="error" message="Ошибка!"  />
         </Stack>
     </Box>
   )

@@ -1,31 +1,54 @@
 import './App.css';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+// import '@fontsource/roboto/300.css';
+// import '@fontsource/roboto/400.css';
+// import '@fontsource/roboto/500.css';
+// import '@fontsource/roboto/700.css';
 
 // import AuthComponent from './components/AuthComponent'
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import TestComponent from './components/TestComponent';
-import LoginComponent from './components/LoginComponent';
-import RegisterComponent from './components/RegisterComponent'
+import Login from './components/Login';
+import Register from './components/Register'
 import ForgotPassword from './components/ForgotPassword';
-import CabinetComponent from './components/CabinetComponent';
+import Cabinet from './components/Cabinet';
 import EditCabinet from './components/EditCabinet';
 import ResponsiveDrawer from './components/ResponsiveDrawer';
-import Home from './components/Home'
+import Home from './components/Home';
+import Main from './components/Main';
+import Projects from './components/Projects';
+import Users from './components/admin/Users';
 
 import { RequireAuth } from "./hoc/RequireAuth";
 import { AuthProvider } from "./hoc/AuthProvider";
 
+import { cyan, teal, blueGrey } from '@mui/material/colors';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#3463ca"
+    },
+  },
+});
+
 function App() {
 
   return (
+    <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/" element={<Home />}>
-        <Route path="/login" element={<LoginComponent />} />
-        <Route path="/register" element={<RegisterComponent />} />
+        <Route 
+          path="/main" 
+          element={
+            // <RequireAuth>
+              <Main />
+            // </RequireAuth>
+          } 
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path='/forgot_password' element={<ForgotPassword />}/>
         {/* <Route path='/cabinet' element={<CabinetComponent />}/>
         <Route path='/test' element={<TestComponent />}/> */}
@@ -41,7 +64,7 @@ function App() {
           path="/cabinet"
           element={
             <RequireAuth>
-              <CabinetComponent />
+              <Cabinet />
             </RequireAuth>
           }
         />
@@ -53,10 +76,26 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route 
+          path="/projects"
+          element={
+            <RequireAuth>
+              <Projects />
+            </RequireAuth>
+          }
+        />
+        <Route 
+          path="/users"
+          element={
+            <RequireAuth>
+              <Users />
+            </RequireAuth>
+          }
+        />
         </Route>
       </Routes>
+    </ThemeProvider>
   );
 }
 
 export default App;
-
