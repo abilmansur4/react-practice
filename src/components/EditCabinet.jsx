@@ -49,12 +49,6 @@ const EditCabinet = () => {
         setNameOrganization(response.data.nameOrganization);
         
       })
-      // .catch((error) => {
-      //   if (error.response.status === 401) {
-      //     localStorage.removeItem("accessToken");
-      //     localStorage.removeItem("refreshToken");
-      //   }
-      // })
   }, []);
 
   const auth = useAuth();
@@ -90,14 +84,9 @@ const EditCabinet = () => {
       .then((response) => {
         if (response.status === 200) {
           setSuccessOpen(true);
-          setTimeout(() => {
-            navigate("/cabinet")
-          }, 1500);
         };
       })
-    
   }
-
 
   const handleSubmit = () => {
     // const tmp = [username, firstname, lastname, secondname, email, phone, iin, nameOrganization, password];
@@ -139,12 +128,18 @@ const EditCabinet = () => {
       }
     }
     
-    
   };
 
   return (
-    <Box sx={{ width: 500, padding: 6, "borderRadius": "20px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.09)"}}>
-      <Stack spacing={2}>
+    <Container 
+      sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center"  
+    }}>
+      <Box sx={{ width: 500, padding: 6, "borderRadius": "20px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.09)"}}>
+        <Stack spacing={2}>
           <Typography variant="h5">Редактировать профиль</Typography>
           <TextField className="txtField" label="Логин" value={username || ''} variant="standard" type="text" size="small" onChange={(e) => setUsername(e.target.value)}/>
           <TextField className="txtField" label="Имя" value={firstname || ''} variant="standard" type="text" onChange={(e) => setFirstname(e.target.value)}/>
@@ -159,9 +154,10 @@ const EditCabinet = () => {
           <TextField className="txtField" label="Повторите пароль" variant="standard" type="password" onChange={(e) => setPasswordCheck(e.target.value)}/>
           <Button type="submit" variant="contained" onClick={handleSubmit}>Сохранить</Button>
           <SnackbarComponent open={successOpen} onClose={handleCloseSuccess} severity="success" message="Данные успешно сохранены!"  />
-          <SnackbarComponent key={vertical + horizontal} anchorOrigin={{ vertical, horizontal }} open={open} onClose={handleCloseError} severity="error" message="Ошибка!"  />
+          <SnackbarComponent open={open} onClose={handleCloseError} severity="error" message="Ошибка!"/>
         </Stack>
-    </Box>
+      </Box>
+    </Container>
   )
 };
 

@@ -13,6 +13,10 @@ const Main = () => {
 
   const navigate = useNavigate();
 
+  // const userComponents = [
+  //   {}
+  // ]
+
   return (
     <Box sx={{ flexGrow: 1}}>
       <Grid container spacing={2}>
@@ -32,7 +36,7 @@ const Main = () => {
                 Кабинет
               </Typography>
               <CardActions>
-                <Button size="small">Перейти</Button>
+                <Button size="small" onClick={() => navigate("/cabinet")}>Перейти</Button>
               </CardActions>
             </CardContent>
             <CardMedia

@@ -26,6 +26,12 @@ const Cabinet = () => {
     }
   };
 
+  const config1 = {
+    headers: {
+      "refreshToken" : "refreshToken " + localStorage.getItem('refreshToken')
+    }
+  };
+
   const style = {
     "& .MuiInputBase-input.Mui-disabled": {
       WebkitTextFillColor: "#434343",
@@ -34,13 +40,10 @@ const Cabinet = () => {
   
 
   useEffect(() => {
-    // axios.get("http://localhost:5000/api/users/")
-    //   .then((response) => {
-    //     console.log(response.data);
-    //   })
+
     axios.get("http://localhost:5000/api/users/user=" + localStorage.getItem("userId"), config)
       .then((response) => {
-        // console.log(response.data);
+        // console.log(response);
         setUsername(response.data.username);
         setFirstname(response.data.firstName);
         setLastname(response.data.lastName);
@@ -49,13 +52,15 @@ const Cabinet = () => {
         setPhone(response.data.phone);
         setIin(response.data.iin);
         setNameOrganization(response.data.nameOrganization);
-        
       })
       .catch((error) => {
-        if (error.response.status === 401) {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-        }
+        // if (error.response.status === 401) {
+        //   axios.get("http://localhost:5000/api/auth/refresh")
+        //   .then((response) => {
+        //     localStorage.setItem("accessToken", response.data.accessToken);
+        //     localStorage.setItem("refreshToken", response.data.refreshToken);
+        //   })
+        // }
       })
   }, [])
 
@@ -121,7 +126,6 @@ const Cabinet = () => {
     // <Typography variant="h1">Cabinet</Typography>
     <Container 
       sx={{
-      // height: "80vh",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
