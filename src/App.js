@@ -6,8 +6,8 @@ import './App.css';
 
 // import AuthComponent from './components/AuthComponent'
 import { Routes, Route, Navigate } from 'react-router-dom';
-
-import TestComponent from './components/TestComponent';
+import { useEffect } from 'react';
+import TokenManager from './hoc/TokenManager';
 import Login from './components/Login';
 import Register from './components/Register'
 import ForgotPassword from './components/ForgotPassword';
@@ -35,6 +35,10 @@ const theme = createTheme({
 
 function App() {
 
+  // useEffect(() => {
+    
+  // }, [])
+
   return (
     <ThemeProvider theme={theme}>
       <Routes>
@@ -52,14 +56,6 @@ function App() {
         <Route path='/forgot_password' element={<ForgotPassword />}/>
         {/* <Route path='/cabinet' element={<CabinetComponent />}/>
         <Route path='/test' element={<TestComponent />}/> */}
-        <Route
-          path="/test"
-          element={
-            <RequireAuth>
-              <TestComponent />
-            </RequireAuth>
-          }
-        />
         <Route 
           path="/cabinet"
           element={
@@ -94,6 +90,7 @@ function App() {
         />
         </Route>
       </Routes>
+      {/* <TokenManager /> */}
     </ThemeProvider>
   );
 }
