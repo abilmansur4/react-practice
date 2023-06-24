@@ -5,15 +5,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
+import TextField, { textFieldClasses } from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton  from '@mui/material/IconButton';
+
 const FormDialog = ({
-  openFormDialog, closeFormDialog, handleChange, 
+  openFormDialog, closeFormDialog, handleChange, formDialogTitle,
   username, setUsername, 
   email, setEmail,
   firstname, setFirstname,
@@ -21,7 +26,10 @@ const FormDialog = ({
   secondname, setSecondname,
   phone, setPhone,
   iin, setIin,
-  nameOrganization, setNameOrganization
+  nameOrganization, setNameOrganization,
+  password, setPassword,
+  showPassword, setShowPassword,
+  handleClickShowPassword, handleMouseDownPassword
 }) => {
 
   const [successOpen, setSuccessOpen] = useState(false);
@@ -30,42 +38,6 @@ const FormDialog = ({
     vertical: 'top',
     horizontal: 'center'
   });
-
-  // const [userInfo, setUserInfo] = useState({
-  //   username: '',
-  //   firstname: '',
-  //   lastname: '',
-  //   secondname: '',
-  //   email: '',
-  //   phone: '',
-  //   iin: '',
-  //   nameOrganization: ''
-  // });
-
-  // const handleChange = (event) => {
-  //   setUserInfo({
-  //     ...userInfo,
-  //     [event.target.name]: event.target.value
-  //   });
-  // };
-  // const [usr, setUsr] = useState(user);
-
-  // useEffect(() => {
-  //   setUserInfo({
-  //     ...userInfo,
-  //     username: user.username,
-  //     firstname: user.firstname,
-  //     lastname: user.lastname,
-  //     secondname: user.secondname,
-  //     email: user.email,
-  //     phone: user.phone,
-  //     iin: user.iin,
-  //     nameOrganization: user.nameOrganization
-  //   });
-  //   console.log(userInfo)
-  // }, [])
-
-  // console.log(usr)
 
   const update = async (user) => {
     await axios.put("http://localhost:5000/api/users/" + localStorage.userId, user)
@@ -78,33 +50,10 @@ const FormDialog = ({
     )
   }
 
-  // const handleSubmit = () => {
-  //   const usr = {};
-  //   if (username !== '') {
-  //     usr.username = username;
-  //   } if (firstname !== '') {
-  //     usr.firstName = firstname;
-  //   } if (lastname !== '') {
-  //     usr.lastName = lastname;
-  //   } if (secondname !== '') {
-  //     usr.secondName = secondname;
-  //   } if (email !== '') {
-  //     usr.email = email;
-  //   } if (phone !== '') {
-  //     usr.phone = phone;
-  //   } if (iin !== '') {
-  //     usr.iin = iin;
-  //   } if (nameOrganization !== '') {
-  //     usr.nameOrganization = nameOrganization;
-  //   } 
-    
-  //   update(usr);
-  // };
-
   return (
     <div>
       <Dialog open={openFormDialog} onClose={closeFormDialog}>
-        <DialogTitle>Редактировать профиль</DialogTitle>
+        <DialogTitle>{formDialogTitle}</DialogTitle>
         <DialogContent>
           <Box sx={{ width: 400, padding: 2 }}>
           <Stack spacing={2}>
@@ -116,6 +65,27 @@ const FormDialog = ({
             <TextField className="txtField" label="Телефон" value={phone || ''} variant="standard" type="text" onChange={(e) => setPhone(e.target.value)}/>
             <TextField className="txtField" label="ИИН" value={iin || ''} variant="standard" type="text" onChange={(e) => setIin(e.target.value)}/>
             <TextField className="txtField" id="standard-helperText2" helperText="*Необязательно" label="Название организации" value={nameOrganization || ''} variant="standard" type="text" onChange={(e) => setNameOrganization(e.target.value)}/>
+            {/* <TextField className="txtField" label="Пароль" value={password || ''} variant="standard" type="password" onChange={(e) => setPassword(e.target.value)}/> */}
+            <TextField
+            label='Пароль'
+            variant="standard"
+            type={showPassword ? "text" : "password"} // <-- This is where the magic happens
+            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{ // <-- This is where the toggle button is added.
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+              autoComplete: 'new-password'
+            }}
+          />
             {/* <Button type="submit" variant="contained" onClick={handleSubmit}>Сохранить</Button> */}
             {/* <SnackbarComponent open={successOpen} onClose={handleCloseSuccess} severity="success" message="Данные успешно сохранены!"  />
             <SnackbarComponent key={vertical + horizontal} anchorOrigin={{ vertical, horizontal }} open={open} onClose={handleCloseError} severity="error" message="Ошибка!"  /> */}

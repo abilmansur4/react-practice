@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -18,8 +18,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import FormDialog from '../FormDialog';
+import Grid from '@mui/material/Unstable_Grid2';
+import AddIcon from '@mui/icons-material/Add';
+import Pagination from '@mui/material/Pagination';
+
+import SearchUsers from './SearchUsers';
 import SnackbarComponent from '../SnackbarComponent';
+import FormDialog from '../FormDialog';
 
 const Users = () => {
 
@@ -34,14 +39,30 @@ const Users = () => {
   const [phone, setPhone] = useState('');
   const [iin, setIin] = useState('');
   const [nameOrganization ,setNameOrganization] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const [openDeleteDialog, setopenDeleteDialog] = useState(false);
   const [openFormDialog, setOpenFormDialog] = useState(false);
+  const [formDialogTitle, setFormDialogTitle] = useState('');
+  const [isEditingUser, setIsEditingUser] = useState(false);
   const [user, setUser] = useState('');
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('');
-
   const [users, setUsers] = useState([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; // Количество элементов на странице
+  const lastIndex = currentPage * itemsPerPage;
+  const firstIndex = lastIndex - itemsPerPage;
+  
+
+  const [searchResults, setSearchResults] = useState([]);
+
+  const currentItems = searchResults.slice(firstIndex, lastIndex); 
+
+  const [userForSearch, setUserForSearch] = useState('');
   
   const config = {
     headers: {
@@ -49,19 +70,88 @@ const Users = () => {
     }
   };
 
-  const navigate = useNavigate();
+  // Переключение страниц
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   // Получение всех пользователей
   const getUsers = () => {
     axios.get("http://localhost:5000/api/users", config)
     .then((response) => {
-      // console.log(response);
       setUsers(response.data);
+      setSearchResults(response.data);
     })
     .catch((error) => {
     });
-    
   }
+
+  // Создание пользователя
+  const createUser = () => {
+    setIsEditingUser(false);
+    setFormDialogTitle("Создать пользователя");
+    setOpenFormDialog(true);
+  }
+
+  const create = (user) => {
+    const usr = {...user, positionId: '1', roles: [1]};
+    axios.post("http://localhost:5000/api/users/create", usr, config)
+      .then((response) => {
+        console.log(response);
+        const userr = {
+          id: response.data.id,
+          username: response.data.username,
+          firstname: response.data.firstName,
+          lastname: response.data.lastName,
+          secondname: response.data.secondName,
+          email: response.data.email,
+          phone: response.data.phone,
+          iin: response.data.iin,
+          nameOrganization: response.data.nameOrganization,
+          password: user.password,
+        }
+        closeFormDialog();
+        setMessage("Пользователь успешно создан!");
+        setSeverity("success");
+        setOpen(true);
+    
+        setUsers([...users, userr]);
+      })
+      .catch((error) => {
+        setMessage(error.response.data.message);
+        setSeverity("error");
+        setOpen(true);
+      })
+  }
+
+  // Поиск пользователя
+  const searchUser = () => {
+    console.log(userForSearch);
+    handleSearch();
+  }
+
+  const handleSearch = () => {
+    const results = users.filter(user => user.username.includes(userForSearch));
+    setSearchResults(results);
+    setCurrentPage(1);
+  };
+
+  const handleChangeSearchQuery = (event) => {
+    setUserForSearch(event.target.value);
+    handleSearch();
+  };
+
+  const handleResetSearch = () => {
+    setUserForSearch('');
+    getUsers();
+    setCurrentPage(1);
+  };
 
   // Удаление пользователя
   const deleteUser = (id) => {
@@ -96,6 +186,7 @@ const Users = () => {
 
   // Редактирование пользователя
   const handleClickOpenFormDialog = (user) => {
+    setIsEditingUser(true);
     setId(user.id);
     setUsername(user.username);
     setFirstname(user.firstName);
@@ -105,20 +196,13 @@ const Users = () => {
     setEmail(user.email);
     setIin(user.iin);
     setNameOrganization(user.nameOrganization);
+    setFormDialogTitle("Редактировать пользователя")
     setOpenFormDialog(true);
   }
 
+  // Сохранить редактирование или создание пользователя
   const handleChange = (event) => {
-    const user = {
-      // 'username': username,
-      // 'firstName': firstname,
-      // 'lastName': lastname,
-      // 'secondName': secondname,
-      // 'email': email,
-      // 'phone': phone,
-      // 'iin': iin,
-      // 'nameOrganization': nameOrganization
-    }
+    const user = {}
 
     user.username = username;
     user.firstName = firstname;
@@ -128,6 +212,7 @@ const Users = () => {
     user.phone = phone;
     user.iin = iin;
     user.nameOrganization = nameOrganization;
+    user.password = password;
 
     const updatedUser = users.map(item => {
       if (item.id === id) {
@@ -138,9 +223,12 @@ const Users = () => {
 
     setUsers(updatedUser);
 
-    update(user);
+    if(isEditingUser === false) {
+      create(user);
+    } else {
+      update(user);
+    }
 
-    
   };
 
   const update = async (user) => {
@@ -155,6 +243,9 @@ const Users = () => {
           //   navigate(0);
           // }, 2000);
         };
+      })
+      .catch((error) => {
+        console.log(error);
       })
   }
 
@@ -185,7 +276,23 @@ const Users = () => {
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <TableContainer component={Paper} sx={{width: 750}}>
+      <Stack spacing={2}>
+      <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
+        <Grid xs={10}>
+          <SearchUsers 
+            userForSearch={userForSearch} 
+            setUserForSearch={setUserForSearch} 
+            searchUser={searchUser} 
+            handleChangeSearchQuery={handleChangeSearchQuery}
+            handleResetSearch={handleResetSearch}
+          />
+        </Grid>
+        <Grid xs={2}>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={createUser}>Создать</Button>
+        </Grid>
+        
+      </Grid>
+      <TableContainer component={Paper} sx={{width: 800}}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -195,7 +302,7 @@ const Users = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {currentItems.map((user) => (
               <TableRow
                 key={user.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -221,6 +328,16 @@ const Users = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+        count={Math.ceil(users.length / itemsPerPage)}
+        page={currentPage}
+        onChange={handlePageChange}
+      />
       <div>
         <Dialog
           open={openDeleteDialog}
@@ -234,12 +351,8 @@ const Users = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleDeleteUser}>
-              Да
-            </Button>
-            <Button onClick={handleClose} autoFocus>
-              Нет
-            </Button>
+            <Button onClick={handleDeleteUser}>Да</Button>
+            <Button onClick={handleClose} autoFocus>Нет</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -248,6 +361,7 @@ const Users = () => {
         openFormDialog={openFormDialog} 
         closeFormDialog={closeFormDialog} 
         handleChange={handleChange}
+        formDialogTitle={formDialogTitle}
         username={username}
         setUsername={setUsername}
         email={email}
@@ -264,7 +378,12 @@ const Users = () => {
         setIin={setIin}
         nameOrganization={nameOrganization}
         setNameOrganization={setNameOrganization}
-        
+        password={password}
+        setPassword={setPassword}
+        showPassword={showPassword}
+        setShowPassword={setShowPassword}
+        handleClickShowPassword={handleClickShowPassword}
+        handleMouseDownPassword={handleMouseDownPassword}
       />
       <SnackbarComponent 
         open={open} 
@@ -272,6 +391,7 @@ const Users = () => {
         severity={severity} 
         message={message} 
       />
+      </Stack>
     </Box>
   )
 };

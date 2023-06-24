@@ -73,6 +73,10 @@ const Login = () => {
             {/* <Link to="/forgot_password">Забыл пароль</Link> */}
             Забыл пароль
           </Linkto>
+          <Linkto href="/register" underline="none">
+            {/* <Link to="/forgot_password">Забыл пароль</Link> */}
+            Регистрация
+          </Linkto>
         </Stack>
       </Box>
       </Box>

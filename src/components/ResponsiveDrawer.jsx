@@ -149,12 +149,19 @@ function ResponsiveDrawer(props) {
                   </ListItemButton>
                 </ListItem>
                 {
-                  auth.userRole === "3" ? (
+                  auth.accessToken && auth.userRole === "3" ? (
+                    <>
                     <ListItem onClick={() => { navigate("/users")}} disablePadding>
                       <ListItemButton>
                         <ListItemText primary="Пользователи" primaryTypographyProps={{ fontSize: 14 }}/>
                       </ListItemButton>
                     </ListItem>
+                    <ListItem onClick={() => { navigate("/users_test")}} disablePadding>
+                      <ListItemButton>
+                        <ListItemText primary="Пользователи TEST" primaryTypographyProps={{ fontSize: 14 }}/>
+                      </ListItemButton>
+                    </ListItem>
+                    </>
                   ) : (
                     <Box />
                   )

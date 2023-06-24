@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Stack, Box, Container, Button, TextField, Checkbox, FormControlLabel, FormGroup, Typography } from "@mui/material";
 import { useAuth } from "../hook/useAuth";
-// import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
+
+import SnackbarComponent from './SnackbarComponent';
 
 const Register = () => {
 
@@ -12,13 +14,28 @@ const Register = () => {
   const [phone, setPhone] = useState('');
   const [ruleAccept, setRuleAccept] = useState(false);
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [severity, setSeverity] = useState('');
+
   axios.defaults.withCredentials = true;
+
+  const navigate = useNavigate();
 
   const auth = useAuth();
   // const navigate = useNavigate();
   // const location = useLocation();
 
   // const fromPage = location.state?.from?.pathname || "/";
+
+  // Уведомления
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleCheckboxChange = (event) => {
     setRuleAccept(event.target.checked);
@@ -27,6 +44,21 @@ const Register = () => {
 
   const handleSubmit = () => {
     // auth.login(username, password);
+    // try{
+    //   const response = await auth.register(username, password, email, phone, ruleAccept);
+    //   if(response.status === 200){
+    //     setMessage("Вы успешно прошли регистрацию!");
+    //     setSeverity("success");
+    //     setOpen(true);
+    //     setTimeout(() => {
+    //       navigate("/login");
+    //     }, 2000);
+    //   } else if (response.status === 400) {
+    //     console.log(response.data.message);
+    //   }
+    // } catch (error) {
+    //   console.log(error)
+    // }
     auth.register(username, password, email, phone, ruleAccept);
   };
 
@@ -51,6 +83,12 @@ const Register = () => {
             <FormControlLabel control={<Checkbox onChange={handleCheckboxChange} size="small"/>} label="С правилами ознакомлен" />
           </FormGroup>
           <Button type="submit" variant="contained" onClick={handleSubmit}>Зарегистрироваться</Button>
+          {/* <SnackbarComponent 
+            open={open} 
+            onClose={handleCloseSuccess} 
+            severity={severity} 
+            message={message} 
+          /> */}
         </Stack>
       </Box>
     </Container>  
