@@ -2,6 +2,8 @@ import { useState, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import SnackbarComponent from '../components/SnackbarComponent'
+
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -39,7 +41,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then((response) => {
         if (response.data) {
-          console.log(response.data);
+          // console.log(response.data.user);
           localStorage.setItem("userId", response.data.user.id);
           localStorage.setItem("accessToken", response.data.accessToken);
           localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -85,16 +87,15 @@ export const AuthProvider = ({ children }) => {
     })
     .then((response) => { 
       if (response.data) {
-        console.log(response.data);
+        console.log(response);
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         setAccessToken(localStorage.getItem("accessToken"));
         setRefreshToken(localStorage.getItem("refreshToken"));
-        navigate("/", { replace: true });
       }
     })
     .catch((error) => {
-      alert(error.response.data.message);
+      console.log(error)
     });
   }
 

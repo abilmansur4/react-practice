@@ -5,6 +5,8 @@ const TokenManager = () => {
   const updateToken = () => {
     axios.get("http://localhost:5000/api/auth/refresh")
       .then((response) => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
       })
