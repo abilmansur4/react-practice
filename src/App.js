@@ -18,6 +18,10 @@ import Home from './components/Home';
 import Main from './components/Main';
 import Projects from './components/Projects';
 import Users from './components/admin/Users';
+import TestComponent from './components/TestComponent';
+import AddClient from './components/reception/AddClient';
+import ManagerEditClient from './components/manager/ManagerEditClient';
+import DoctorEditClient from './components/doctor/DoctorEditClient';
 
 import { RequireAuth } from "./hoc/RequireAuth";
 import { AuthProvider } from "./hoc/AuthProvider";
@@ -88,9 +92,41 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route 
+          path="/users_test"
+          element={
+            <RequireAuth>
+              <TestComponent />
+            </RequireAuth>
+          }
+        />
+        <Route 
+          path="/add-client"
+          element={
+            <RequireAuth>
+              <AddClient />
+            </RequireAuth>
+          }
+        />
+        <Route 
+          path="/manager/edit-client"
+          element={
+            <RequireAuth>
+              <ManagerEditClient />
+            </RequireAuth>
+          }
+        />
+        <Route 
+          path="/doctor/edit-client"
+          element={
+            <RequireAuth>
+              <DoctorEditClient />
+            </RequireAuth>
+          }
+        />
         </Route>
       </Routes>
-      {/* <TokenManager /> */}
+      <TokenManager />
     </ThemeProvider>
   );
 }

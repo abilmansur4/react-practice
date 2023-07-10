@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from "../hook/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Stack, Box, Container, Button, TextField, Checkbox, FormControlLabel, FormGroup, Typography } from "@mui/material";
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SnackbarComponent from './SnackbarComponent'
 
 const EditCabinet = () => {
@@ -138,6 +138,7 @@ const EditCabinet = () => {
       alignItems: "center",
       justifyContent: "center"  
     }}>
+      <Button type="submit" variant="outlined" onClick={() => navigate(-1)} sx={{mb: 3}}><ArrowBackIcon /></Button>
       <Box sx={{ width: 500, padding: 6, "borderRadius": "20px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.09)"}}>
         <Stack spacing={2}>
           <Typography variant="h5">Редактировать профиль</Typography>

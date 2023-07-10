@@ -7,156 +7,88 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hook/useAuth";
+import { useNavigate, useHistory } from "react-router-dom";
 
 const Main = () => {
 
+  const auth = useAuth();
   const navigate = useNavigate();
 
-  // const userComponents = [
-  //   {}
-  // ]
+  const userData = [
+    {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
+    {title: "Регистратура", link: "/add-client", image: "/images/library.svg"},
+    // {title: "Проекты", link: "/cabinet", image: "/images/process.svg"},
+    // {title: "Документооборот", link: "/cabinet", image: "/images/docs.svg"},
+    // {title: "Задачи", link: "/cabinet", image: "/images/tasks.svg"},
+    // {title: "Новости", link: "/cabinet", image: "/images/news.svg"},
+    // {title: "Справочник", link: "/cabinet", image: "/images/spravochnik.svg"}
+  ]
+
+  const managerData = [
+    {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
+    {title: "Библиотека", link: "/cabinet", image: "/images/library.svg"},
+    {title: "Регистратура", link: "/manager/edit-client", image: "/images/process.svg"},
+    // {title: "Документооборот", link: "/cabinet", image: "/images/docs.svg"},
+    // {title: "Задачи", link: "/cabinet", image: "/images/tasks.svg"},
+    // {title: "Новости", link: "/cabinet", image: "/images/news.svg"},
+    // {title: "Справочник", link: "/cabinet", image: "/images/spravochnik.svg"}
+  ]
+
+  const therapistData = [
+    {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
+    {title: "Библиотека", link: "/cabinet", image: "/images/library.svg"},
+    {title: "Пациенты", link: "/doctor/edit-client", image: "/images/process.svg"},
+  ]
+
+  const adminData = [
+    {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
+    {title: "Библиотека", link: "/cabinet", image: "/images/library.svg"},
+    {title: "Проекты", link: "/projects", image: "/images/process.svg"},
+    {title: "Документооборот", link: "/cabinet", image: "/images/docs.svg"},
+    {title: "Задачи", link: "/cabinet", image: "/images/tasks.svg"},
+    {title: "Новости", link: "/cabinet", image: "/images/news.svg"},
+    {title: "Справочник", link: "/cabinet", image: "/images/spravochnik.svg"}
+  ]
+
+  const renderDataByRole = () => {
+    let data = [];
+
+    if (auth.userRole == 4) {
+      data = userData;
+    } else if (auth.userRole == 2) {
+      data = managerData;
+    } else if (auth.userRole == 3) {
+      data = adminData;
+    } else if (auth.userRole == 1) {
+      data = therapistData;
+    }
+
+    // return data.map((item, index) => <div key={index}>{item}</div>);
+    return (
+      <Box sx={{ flexGrow: 1}}>
+        <Grid container spacing={2}>
+          {data.map((item) => (
+            <Grid xs="6" md="6" key={item.title}>
+              <Card sx={{ width: 440, height: 180, display: 'flex', alignItems: 'center', p: 2, "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"  }}>
+                <CardContent>
+                  <Typography variant="h5" component="div"> {item.title} </Typography>
+                  <CardActions>
+                    <Button size="small" onClick={() => navigate(item.link)}>Открыть</Button>
+                  </CardActions>
+                </CardContent>
+                <CardMedia component="img" sx={{ width: 200 }} image={item.image} />
+              </Card>
+            </Grid>
+          ))
+        }
+        </Grid>
+      </Box>
+    )
+  };
 
   return (
-    <Box sx={{ flexGrow: 1}}>
-      <Grid container spacing={2}>
-        <Grid xs="auto">
-          <Card sx={{ 
-              height: 180, 
-              display: 'flex', 
-              // alignItems: 'center',
-              // backgroundImage: 'url(/images/profile.svg)',
-              // backgroundSize: 'cover',
-              p: 5,
-              "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"
-              }}
-            >
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Кабинет
-              </Typography>
-              <CardActions>
-                <Button size="small" onClick={() => navigate("/cabinet")}>Перейти</Button>
-              </CardActions>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ width: 180 }}
-              image="/images/profile.svg"
-              alt="Live from space album cover"
-            />
-          </Card>
-        </Grid>
-        <Grid xs="auto">
-          <Card sx={{ height: 180, display: 'flex', alignItems: 'center', p: 5, "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"  }}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Библиотека
-              </Typography>
-              <CardActions>
-                <Button size="small">Открыть</Button>
-              </CardActions>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ width: 180 }}
-              image="/images/library.svg"
-              alt="Live from space album cover"
-            />
-          </Card>
-        </Grid>
-        <Grid xs="auto">
-          <Card sx={{ height: 180, display: 'flex', alignItems: 'center', p: 5, "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"  }}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Проекты
-              </Typography>
-              <CardActions>
-                <Button size="small" onClick={() => {navigate("/projects")}}>Перейти</Button>
-              </CardActions>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ width: 180 }}
-              image="/images/process.svg"
-              alt="Live from space album cover"
-            />
-          </Card>
-        </Grid>
-        <Grid xs="auto">
-          <Card sx={{ height: 180, display: 'flex', alignItems: 'center', p: 5, "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"  }}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Документооборот
-              </Typography>
-              <CardActions>
-                <Button size="small">Посмотреть</Button>
-              </CardActions>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ width: 180 }}
-              image="/images/docs.svg"
-              alt="Live from space album cover"
-            />
-          </Card>
-        </Grid>
-        <Grid xs="auto">
-          <Card sx={{ height: 180, display: 'flex', alignItems: 'center', p: 5, "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"  }}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Задачи
-              </Typography>
-              <CardActions>
-                <Button size="small">Перейти</Button>
-              </CardActions>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ width: 180 }}
-              image="/images/tasks.svg"
-              alt="Live from space album cover"
-            />
-          </Card>
-        </Grid>
-        <Grid xs="auto">
-          <Card sx={{ height: 180, display: 'flex', alignItems: 'center', p: 5, "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"  }}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Новости
-              </Typography>
-              <CardActions>
-                <Button size="small">Смотреть</Button>
-              </CardActions>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ width: 180 }}
-              image="/images/news.svg"
-              alt="Live from space album cover"
-            />
-          </Card>
-        </Grid>
-        <Grid xs="auto">
-          <Card sx={{ height: 180, display: 'flex', alignItems: 'center', p: 5, "borderRadius": "10px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"  }}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Справочник
-              </Typography>
-              <CardActions>
-                <Button size="small">Открыть</Button>
-              </CardActions>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ width: 180 }}
-              image="/images/spravochnik.svg"
-              alt="Live from space album cover"
-            />
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
+    renderDataByRole()
   )
 };
 

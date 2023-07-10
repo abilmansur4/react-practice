@@ -8,8 +8,13 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import AddCardIcon from '@mui/icons-material/AddCard';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
@@ -145,20 +150,74 @@ function ResponsiveDrawer(props) {
               <List>
                 <ListItem onClick={() => { navigate("/main")}} disablePadding>
                   <ListItemButton>
+                    <ListItemIcon>
+                      <HomeIcon /> 
+                    </ListItemIcon>
                     <ListItemText primary="Главная" primaryTypographyProps={{ fontSize: 14 }}/>
                   </ListItemButton>
                 </ListItem>
+                <ListItem onClick={() => { navigate("/cabinet")}} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AccountCircleIcon /> 
+                    </ListItemIcon>
+                    <ListItemText primary="Кабинет" primaryTypographyProps={{ fontSize: 14 }}/>
+                  </ListItemButton>
+                </ListItem>
+                {
+                  auth.accessToken && auth.userRole == 4 ? (
+                    <>
+                    <ListItem onClick={() => { navigate("/add-client")}} disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <AddCardIcon /> 
+                        </ListItemIcon>
+                        <ListItemText primary="Регистратура" primaryTypographyProps={{ fontSize: 14 }}/>
+                      </ListItemButton>
+                    </ListItem>
+                    </>
+                  ) : (
+                    <Box />
+                  )
+                }
+                {
+                  auth.accessToken && auth.userRole == 2 ? (
+                    <>
+                    <ListItem onClick={() => { navigate("/manager/edit-client")}} disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <AddCardIcon /> 
+                        </ListItemIcon>
+                        <ListItemText primary="Регистратура" primaryTypographyProps={{ fontSize: 14 }}/>
+                      </ListItemButton>
+                    </ListItem>
+                    </>
+                  ) : (
+                    <Box />
+                  )
+                }
+                {
+                  auth.accessToken && auth.userRole == 1 ? (
+                    <>
+                    <ListItem onClick={() => { navigate("/doctor/edit-client")}} disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <AddCardIcon /> 
+                        </ListItemIcon>
+                        <ListItemText primary="Пациенты" primaryTypographyProps={{ fontSize: 14 }}/>
+                      </ListItemButton>
+                    </ListItem>
+                    </>
+                  ) : (
+                    <Box />
+                  )
+                }
                 {
                   auth.accessToken && auth.userRole === "3" ? (
                     <>
                     <ListItem onClick={() => { navigate("/users")}} disablePadding>
                       <ListItemButton>
                         <ListItemText primary="Пользователи" primaryTypographyProps={{ fontSize: 14 }}/>
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem onClick={() => { navigate("/users_test")}} disablePadding>
-                      <ListItemButton>
-                        <ListItemText primary="Пользователи TEST" primaryTypographyProps={{ fontSize: 14 }}/>
                       </ListItemButton>
                     </ListItem>
                     </>
@@ -168,7 +227,16 @@ function ResponsiveDrawer(props) {
                 }
                 {
                   auth.accessToken ? (
-                    <Box />
+                    <ListItem onClick={() => {
+                      auth.logout(() => navigate("/login", { replace: true })) }
+                    } disablePadding>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <LogoutIcon /> 
+                        </ListItemIcon>
+                        <ListItemText primary="Выйти" primaryTypographyProps={{ fontSize: 14 }}/>
+                      </ListItemButton>
+                    </ListItem>
                   ) : (
                     <div>
                     <ListItem disablePadding>

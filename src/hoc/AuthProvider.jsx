@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then((response) => {
         if (response.data) {
-          // console.log(response.data.user);
+          console.log(response.data.user);
           localStorage.setItem("userId", response.data.user.id);
           localStorage.setItem("accessToken", response.data.accessToken);
           localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -61,10 +61,12 @@ export const AuthProvider = ({ children }) => {
     axios.post("http://localhost:5000/api/auth/logout", config)
       .then((response) => {
       // console.log(response);
+      localStorage.removeItem("userRole");
+      localStorage.removeItem("userId");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      setAccessToken(null);
-      setRefreshToken(null);
+      // setAccessToken(null);
+      // setRefreshToken(null);
       navigate("/login", { replace: true });
       
     });
