@@ -74,6 +74,18 @@ const Users = () => {
 
   const navigate = useNavigate();
 
+  // Получение всех пользователей
+  const getUsers = () => {
+    axios.get("http://localhost:5000/api/users", config)
+    .then((response) => {
+      setUsers(response.data);
+      setSearchResults(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   // Переключение страниц
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
@@ -264,17 +276,6 @@ const Users = () => {
   };
 
   useEffect(() => {
-    // Получение всех пользователей
-    const getUsers = () => {
-      axios.get("http://localhost:5000/api/users", config)
-      .then((response) => {
-        setUsers(response.data);
-        setSearchResults(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }
 
     getUsers();
   }, [])
