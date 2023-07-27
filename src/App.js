@@ -16,7 +16,6 @@ import EditCabinet from './components/EditCabinet';
 import ResponsiveDrawer from './components/ResponsiveDrawer';
 import Home from './components/Home';
 import Main from './components/Main';
-import Projects from './components/Projects';
 import Users from './components/admin/Users';
 import TestComponent from './components/TestComponent';
 import AddClient from './components/reception/AddClient';
