@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton  from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
@@ -28,7 +29,10 @@ import SnackbarComponent from './SnackbarComponent';
 import ManagerEditClient from './manager/ManagerEditClient';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const Patients = ({userRole}) => {
+const Patients = ({ userRole }) => {
+
+  // const [role, setRole] = useState('');
+  const role = localStorage.getItem('userRole');
 
   axios.defaults.withCredentials = true;
 
@@ -87,11 +91,9 @@ const Patients = ({userRole}) => {
     });
   }
 
-  // Создание пользователя
+  // Добавление пациента
   // const createUser = () => {
-  //   setIsEditingUser(false);
-  //   setFormDialogTitle("Создать пользователя");
-  //   setOpenFormDialog(true);
+  //   navigate("/add-patient");
   // }
 
   // const create = (user) => {
@@ -148,13 +150,13 @@ const Patients = ({userRole}) => {
     setCurrentPage(1);
   };
 
-  // Удаление пользователя
-  // const deleteUser = (id) => {
-  //   axios.delete("http://localhost:5000/api/users/" + id, config)
-  //   .then((response) => {
-  //     // console.log(response);
-  //   })
-  // }
+  // Удаление пациента
+  const deleteUser = (id) => {
+    axios.delete("http://localhost:5000/api/patient/" + id, config)
+    .then((response) => {
+      // console.log(response);
+    })
+  }
 
   const handleClickOpen = (user) => {
     setUser(user);
@@ -168,7 +170,8 @@ const Patients = ({userRole}) => {
   const handleDeleteUser = () => {
     const updatedData = users.filter(item => item.id !== id);
     setUsers(updatedData);
-    // deleteUser(user.id);
+    setSearchResults(updatedData);
+    deleteUser(user.id);
     handleClose();
     setMessage("Пользователь успешно удален!");
     setSeverity("success");
@@ -275,7 +278,7 @@ const Patients = ({userRole}) => {
     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
       <Stack spacing={2}>
       <Grid container spacing={2} display="flex" justifyContent="center" alignItems="center">
-        <Grid xs={12}>
+        <Grid xs={role == 4 ? 9.8 : 12}>
           <SearchUsers 
             userForSearch={userForSearch} 
             setUserForSearch={setUserForSearch} 
@@ -284,9 +287,14 @@ const Patients = ({userRole}) => {
             handleResetSearch={handleResetSearch}
           />
         </Grid>
-        {/* <Grid xs={2}>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={createUser}>Создать</Button>
-        </Grid> */}
+        {
+          role == 4 && (
+            <Grid xs="auto">
+              <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/add-patient')}>Добавить</Button>
+            </Grid>
+          )
+        }
+        
       </Grid>
       <TableContainer component={Paper} sx={{width: 800}}>
         <Table aria-label="simple table">
@@ -310,11 +318,24 @@ const Patients = ({userRole}) => {
                 <TableCell>{user.iin}</TableCell>
                 <TableCell>{user.telephone}</TableCell>
                 <TableCell>
-                  <Tooltip title="Редактировать">
-                    <IconButton onClick={() => navigate(`/${userRole.toString()}/edit-client/${user.id}`)}>
-                      <EditIcon sx={{ width: 14, height: 14 }} />
-                    </IconButton>
-                  </Tooltip>
+                  {
+                    localStorage.getItem("userRole") != 4 && (
+                      <Tooltip title="Редактировать">
+                        <IconButton onClick={() => navigate(`/edit-patient/${user.id}`)}>
+                          <EditIcon sx={{ width: 14, height: 14 }} />
+                        </IconButton>
+                      </Tooltip>
+                    )
+                  }
+                  {
+                    localStorage.getItem("userRole") == 4 && (
+                      <Tooltip title="Посмотреть">
+                        <IconButton onClick={() => navigate(`/edit-patient/${user.id}`)}>
+                          <VisibilityIcon sx={{ width: 14, height: 14 }} />
+                        </IconButton>
+                      </Tooltip>
+                    )
+                  }
                   { localStorage.getItem("userRole") == 3 && 
                   (<Tooltip title="Удалить">
                     <IconButton onClick={() => handleClickOpen(user)}>

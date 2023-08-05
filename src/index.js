@@ -10,6 +10,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
+        {/* <ResponsiveDrawer /> */}
         <App />
       </AuthProvider>  
     </BrowserRouter>

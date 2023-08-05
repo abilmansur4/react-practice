@@ -8,6 +8,9 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+  // const [accessToken, setAccessToken] = useState('');
+  // const [refreshToken, setRefreshToken] = useState('');
+  // const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
   // const location = useLocation();
 
@@ -37,8 +40,8 @@ export const AuthProvider = ({ children }) => {
   //   }
   // }
 
-  const login = (user, password) => {
-    axios
+  const login = async (user, password) => {
+    await axios
       .post("http://localhost:5000/api/auth", {
         username: user,
         password: password,
@@ -53,11 +56,14 @@ export const AuthProvider = ({ children }) => {
           setAccessToken(localStorage.getItem("accessToken"));
           setRefreshToken(localStorage.getItem("refreshToken"));
           setUserRole(localStorage.getItem("userRole"));
-          navigate("/main", { replace: true });
+          // setAccessToken(response.data.accessToken);
+          // setRefreshToken(response.data.refreshToken);
+          // setUserRole(response.data.user.roles[0].id);
+          navigate("/main");
         }
       })
       .catch((error) => {
-        alert(error.response.data.message);
+        console.error(error);
       });
   };
 

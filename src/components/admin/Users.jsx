@@ -40,10 +40,12 @@ const Users = () => {
   const [secondname, setSecondname] = useState('');
   const [phone, setPhone] = useState('');
   const [iin, setIin] = useState('');
+  const [role, setRole] = useState('');
   const [nameOrganization ,setNameOrganization] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const [button, setButton] = useState('');
   const [openDeleteDialog, setopenDeleteDialog] = useState(false);
   const [openFormDialog, setOpenFormDialog] = useState(false);
   const [formDialogTitle, setFormDialogTitle] = useState('');
@@ -74,12 +76,17 @@ const Users = () => {
 
   const navigate = useNavigate();
 
+  const handleRole = (e) => {
+    setRole(e.target.value);
+  }
+
   // Получение всех пользователей
   const getUsers = () => {
     axios.get("http://localhost:5000/api/users", config)
     .then((response) => {
-      setUsers(response.data);
-      setSearchResults(response.data);
+      const sortedItems = response.data.slice().sort((a, b) => a.id - b.id);
+      setUsers(sortedItems);
+      setSearchResults(sortedItems);
     })
     .catch((error) => {
       console.log(error);
@@ -99,14 +106,16 @@ const Users = () => {
 
   // Создание пользователя
   const createUser = () => {
+    setButton("Создать")
     setIsEditingUser(false);
     setFormDialogTitle("Создать пользователя");
     setOpenFormDialog(true);
   }
 
-  const create = (user) => {
-    const usr = {...user, positionId: '1', roles: [1]};
-    axios.post("http://localhost:5000/api/users/create", usr, config)
+  const create = async (user) => {
+    // console.log(user);
+    // const usr = {...user, positionId: '1'};
+    await axios.post("http://localhost:5000/api/users/create", user, config)
       .then((response) => {
         console.log(response);
         const userr = {
@@ -118,6 +127,7 @@ const Users = () => {
           email: response.data.email,
           phone: response.data.phone,
           iin: response.data.iin,
+          roles: response.data.roles[0].id,
           nameOrganization: response.data.nameOrganization,
           password: user.password,
         }
@@ -125,14 +135,16 @@ const Users = () => {
         setMessage("Пользователь успешно создан!");
         setSeverity("success");
         setOpen(true);
-    
-        setUsers([...users, userr]);
+        // setUsers([...users, userr]);
+        // setSearchResults([...users, userr]);
       })
       .catch((error) => {
         setMessage(error.response.data.message);
         setSeverity("error");
         setOpen(true);
       })
+      const result = getUsers();
+      setUsers(...users, result);
   }
 
   // Поиск пользователя
@@ -162,7 +174,8 @@ const Users = () => {
   const deleteUser = (id) => {
     axios.delete("http://localhost:5000/api/users/" + id, config)
     .then((response) => {
-      // console.log(response);
+      const result = getUsers();
+      setUsers(result);
     })
   }
 
@@ -176,22 +189,24 @@ const Users = () => {
   };
 
   const handleDeleteUser = () => {
-    const updatedData = users.filter(item => item.id !== id);
-    setUsers(updatedData);
     deleteUser(user.id);
+    // const updatedData = users.filter(item => item.id !== id);
+    // setUsers(updatedData);
     handleClose();
+    
     setMessage("Пользователь успешно удален!");
     setSeverity("success");
     setOpen(true);
     // setTimeout(() => {
     //   navigate(0);
     // }, 2000);
-    getUsers();
+    
   }
 
   // Редактирование пользователя
   const handleClickOpenFormDialog = (user) => {
     setIsEditingUser(true);
+    setButton("Сохранить");
     setId(user.id);
     setUsername(user.username);
     setFirstname(user.firstName);
@@ -200,6 +215,7 @@ const Users = () => {
     setPhone(user.phone);
     setEmail(user.email);
     setIin(user.iin);
+    setRole(user.roles[0]?.id);
     setNameOrganization(user.nameOrganization);
     setFormDialogTitle("Редактировать пользователя")
     setOpenFormDialog(true);
@@ -216,8 +232,10 @@ const Users = () => {
     user.email = email;
     user.phone = phone;
     user.iin = iin;
+    // user.roles = [role];
     user.nameOrganization = nameOrganization;
     user.password = password;
+    user.positionId = 1;
 
     const updatedUser = users.map(item => {
       if (item.id === id) {
@@ -229,9 +247,13 @@ const Users = () => {
     setUsers(updatedUser);
 
     if(isEditingUser === false) {
+      user.roles = [role]
       create(user);
+      console.log(user);
     } else {
+      // user.roles = {role};
       update(user);
+      console.log(user);
     }
 
   };
@@ -240,6 +262,7 @@ const Users = () => {
     await axios.put("http://localhost:5000/api/users/" + id, user, config)
       .then((response) => {
         if (response.status === 200) {
+          console.log(response);
           closeFormDialog();
           setMessage("Пользователь успешно отредактирован!");
           setSeverity("success");
@@ -252,6 +275,8 @@ const Users = () => {
       .catch((error) => {
         console.log(error);
       })
+      const result = getUsers();
+      setUsers(...users, result);
   }
 
   const closeFormDialog = () => {
@@ -263,6 +288,7 @@ const Users = () => {
     setEmail('');
     setPhone('');
     setIin('');
+    setRole('');
     setNameOrganization('');
   }
 
@@ -298,7 +324,6 @@ const Users = () => {
         <Grid xs={2}>
           <Button variant="contained" startIcon={<AddIcon />} onClick={createUser}>Создать</Button>
         </Grid>
-        
       </Grid>
       <TableContainer component={Paper} sx={{width: 800}}>
         <Table aria-label="simple table">
@@ -342,7 +367,7 @@ const Users = () => {
           justifyContent: 'center',
           alignItems: 'center'
         }}
-        count={Math.ceil(users.length / itemsPerPage)}
+        count={Math.ceil(users?.length / itemsPerPage) || 1}
         page={currentPage}
         onChange={handlePageChange}
       />
@@ -384,6 +409,9 @@ const Users = () => {
         setPhone={setPhone}
         iin={iin}
         setIin={setIin}
+        role={role}
+        setRole={setRole}
+        handleRole={handleRole}
         nameOrganization={nameOrganization}
         setNameOrganization={setNameOrganization}
         password={password}
@@ -392,6 +420,8 @@ const Users = () => {
         setShowPassword={setShowPassword}
         handleClickShowPassword={handleClickShowPassword}
         handleMouseDownPassword={handleMouseDownPassword}
+        button={button}
+        setButton={setButton}
       />
       <SnackbarComponent 
         open={open} 

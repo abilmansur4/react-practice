@@ -251,6 +251,7 @@ const ManagerEditClient = ({ user }) => {
                   label="Вид оплаты"
                   onChange={handlePaymentType}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"Бесплатный"}>Бесплатный</MenuItem>
                   <MenuItem value={"Платный"}>Платный</MenuItem>
                 </Select>
@@ -262,6 +263,7 @@ const ManagerEditClient = ({ user }) => {
                   label="Вид лечения"
                   onChange={handleTreatmentType}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"Дневной"}>Дневной</MenuItem>
                   <MenuItem value={"Круглосуточный"}>Круглосуточный</MenuItem>
                 </Select>
@@ -273,8 +275,9 @@ const ManagerEditClient = ({ user }) => {
                   label="Вид пациента"
                   onChange={handlePatientType}
                 >
-                  <MenuItem value={"Ухаж"}>Ухаж</MenuItem>
-                  <MenuItem value={"Самост"}>Самост</MenuItem>
+                  <MenuItem value={"default"}>Не указан</MenuItem>
+                  <MenuItem value={"Ухаживающий"}>Ухаживающий</MenuItem>
+                  <MenuItem value={"Самостоятельный"}>Самостоятельный</MenuItem>
                 </Select>
               </FormControl>
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">

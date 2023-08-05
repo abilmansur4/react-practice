@@ -172,7 +172,7 @@ function ResponsiveDrawer(props) {
                 {
                   auth.accessToken && auth.userRole == 4 ? (
                     <>
-                    <ListItem onClick={() => { navigate("/add-client")}} disablePadding>
+                    <ListItem onClick={() => { navigate("/patients")}} disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
                           <AddCardIcon /> 
@@ -188,7 +188,7 @@ function ResponsiveDrawer(props) {
                 {
                   auth.accessToken && auth.userRole == 2 ? (
                     <>
-                    <ListItem onClick={() => { navigate("/manager/patients")}} disablePadding>
+                    <ListItem onClick={() => { navigate("/patients")}} disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
                           <AddCardIcon /> 
@@ -228,7 +228,7 @@ function ResponsiveDrawer(props) {
                         <ListItemText primary="Пользователи" primaryTypographyProps={{ fontSize: 14 }}/>
                       </ListItemButton>
                     </ListItem>
-                    <ListItem onClick={() => { navigate("/admin/patients")}} disablePadding>
+                    <ListItem onClick={() => { navigate("/patients")}} disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
                           <GroupIcon /> 

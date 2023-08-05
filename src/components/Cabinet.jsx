@@ -39,7 +39,6 @@ const Cabinet = () => {
     }
   }
   
-
   useEffect(() => {
 
     axios.get("http://localhost:5000/api/users/user=" + localStorage.getItem("userId"), config)

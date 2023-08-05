@@ -303,6 +303,7 @@ const DoctorEditClient = () => {
                   label="Вид оплаты"
                   onChange={handlePaymentType}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"Бесплатный"}>Бесплатный</MenuItem>
                   <MenuItem value={"Платный"}>Платный</MenuItem>
                 </Select>
@@ -314,6 +315,7 @@ const DoctorEditClient = () => {
                   label="Вид лечения"
                   onChange={handleTreatmentType}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"Дневной"}>Дневной</MenuItem>
                   <MenuItem value={"Круглосуточный"}>Круглосуточный</MenuItem>
                 </Select>
@@ -325,8 +327,9 @@ const DoctorEditClient = () => {
                   label="Вид пациента"
                   onChange={handlePatientType}
                 >
-                  <MenuItem value={"Ухаживающий"}>Ухаж</MenuItem>
-                  <MenuItem value={"Самостоятельный"}>Самост</MenuItem>
+                  <MenuItem value={"default"}>Не указан</MenuItem>
+                  <MenuItem value={"Ухаживающий"}>Ухаживающий</MenuItem>
+                  <MenuItem value={"Самостоятельный"}>Самостоятельный</MenuItem>
                 </Select>
               </FormControl>
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
@@ -356,6 +359,7 @@ const DoctorEditClient = () => {
                   label="№ Палаты"
                   onChange={handleRoom}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"д/н"}>д/н</MenuItem>
                   <MenuItem value={"201"}>201</MenuItem>
                   <MenuItem value={"202"}>202</MenuItem>
@@ -398,6 +402,7 @@ const DoctorEditClient = () => {
                   label="Пол"
                   onChange={handleGender}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"Мужчина"}>Мужчина</MenuItem>
                   <MenuItem value={"Женщина"}>Женщина</MenuItem>
                 </Select>
@@ -410,6 +415,7 @@ const DoctorEditClient = () => {
                   label="Этап"
                   onChange={handleStage}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"КС-2"}>КС-2</MenuItem>
                   <MenuItem value={"КС-3"}>КС-3</MenuItem>
                 </Select>
@@ -431,6 +437,7 @@ const DoctorEditClient = () => {
                   label="Стол"
                   onChange={handleTable}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"№ 9"}>№ 9</MenuItem>
                   <MenuItem value={"№ 10"}>№ 10</MenuItem>
                   <MenuItem value={"№ 9 - зонд"}>№ 9 - зонд</MenuItem>
@@ -444,6 +451,7 @@ const DoctorEditClient = () => {
                   label="Лечящий врач"
                   onChange={handleTherapist}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"doctor1"}>Doctor1</MenuItem>
                   <MenuItem value={"doctor2"}>Doctor2</MenuItem>
                 </Select>
@@ -460,6 +468,7 @@ const DoctorEditClient = () => {
                   label="Требуются доп. услуги"
                   onChange={handleAdditionalServices}
                 >
+                  <MenuItem value={"default"}>Не указан</MenuItem>
                   <MenuItem value={"Да"}>Да</MenuItem>
                   <MenuItem value={"Нет"}>Нет</MenuItem>
                 </Select>

@@ -13,16 +13,15 @@ import Register from './components/Register'
 import ForgotPassword from './components/ForgotPassword';
 import Cabinet from './components/Cabinet';
 import EditCabinet from './components/EditCabinet';
-import ResponsiveDrawer from './components/ResponsiveDrawer';
 import Home from './components/Home';
 import Main from './components/Main';
 import Users from './components/admin/Users';
-import TestComponent from './components/TestComponent';
-import AddClient from './components/reception/AddClient';
-import ManagerEditClient from './components/manager/ManagerEditClient';
-import DoctorEditClient from './components/doctor/DoctorEditClient';
-import AdminEditClient from './components/admin/AdminEditClient';
+import AddPatient from './components/reception/AddPatient';
+// import ManagerEditClient from './components/manager/ManagerEditClient';
+// import DoctorEditClient from './components/doctor/DoctorEditClient';
+// import AdminEditClient from './components/admin/AdminEditClient';
 import Patients from './components/Patients';
+import SwitchEditClient from './components/SwitchEditClient';
 
 import { RequireAuth } from "./hoc/RequireAuth";
 import { AuthProvider } from "./hoc/AuthProvider";
@@ -50,7 +49,7 @@ function App() {
   // }, [])
 
   const auth = useAuth();
-
+  const role = localStorage.getItem('userRole');
   const isAuthenticated = localStorage.getItem('accessToken') && localStorage.getItem('refreshToken');
 
   return (
@@ -58,18 +57,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} >
         <Route 
-          path="/main" 
+          path="main" 
           element={
-            // <RequireAuth>
+            <RequireAuth>
               <Main />
-            // </RequireAuth>
+            </RequireAuth>
           } 
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path='/forgot_password' element={<ForgotPassword />}/>
-        {/* <Route path='/cabinet' element={<CabinetComponent />}/>
-        <Route path='/test' element={<TestComponent />}/> */}
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path='forgot_password' element={<ForgotPassword />}/>
         <Route 
           path="/cabinet"
           element={
@@ -95,26 +92,32 @@ function App() {
           }
         />
         <Route 
-          path="/add-client"
+          path="/add-patient"
           element={
             <RequireAuth>
               <ReceptionComponents>
-                <AddClient />
+                <AddPatient />
               </ReceptionComponents>
             </RequireAuth>
           }
         />
         <Route 
-          path="/admin/patients"
+          path="/patients"
           element={
             <RequireAuth>
-              <AdminComponents>
-                <Patients userRole="admin"/>
-              </AdminComponents>
+              <Patients userRole={role}/>
             </RequireAuth>
           }
         />
         <Route 
+          path="/edit-patient/:id"
+          element={
+            <RequireAuth>
+              <SwitchEditClient userRole={role}/>
+            </RequireAuth>
+          }
+        />
+        {/* <Route 
           path="/admin/edit-client/:id"
           element={
             <RequireAuth>
@@ -123,8 +126,8 @@ function App() {
               </AdminComponents>
             </RequireAuth>
           }
-        />
-        <Route 
+        /> */}
+        {/* <Route 
           path="/manager/patients"
           element={
             <RequireAuth>
@@ -133,8 +136,8 @@ function App() {
               </ManagerComponents>
             </RequireAuth>
           }
-        />
-        <Route 
+        /> */}
+        {/* <Route 
           path="/manager/edit-client/:id"
           element={
             <RequireAuth>
@@ -143,8 +146,8 @@ function App() {
               </ManagerComponents>
             </RequireAuth>
           }
-        />
-        <Route 
+        /> */}
+        {/* <Route 
           path="/doctor/patients"
           element={
             <RequireAuth>
@@ -163,7 +166,8 @@ function App() {
               </DoctorComponents>
             </RequireAuth>
           }
-        />
+        /> */}
+        {/* <Route path="*" element={<Navigate to={'/main'} />} /> */}
         </Route>
       </Routes>
       <TokenManager />

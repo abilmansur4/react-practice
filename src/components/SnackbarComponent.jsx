@@ -14,7 +14,7 @@ const SnackbarComponent = ({open, onClose, severity, message}) => {
         vertical: 'top',
         horizontal: 'center'
       }}
-      open={open} autoHideDuration={3000} onClose={onClose}>
+      open={open} autoHideDuration={2000} onClose={onClose}>
       <Alert onClose={onClose} severity={severity} sx={{ width: '100%' }}>
         {message}
       </Alert>

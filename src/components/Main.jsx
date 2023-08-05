@@ -17,7 +17,7 @@ const Main = () => {
 
   const userData = [
     {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
-    {title: "Регистратура", link: "/add-client", image: "/images/library.svg"},
+    {title: "Регистратура", link: "/patients", image: "/images/library.svg"},
     // {title: "Проекты", link: "/cabinet", image: "/images/process.svg"},
     // {title: "Документооборот", link: "/cabinet", image: "/images/docs.svg"},
     // {title: "Задачи", link: "/cabinet", image: "/images/tasks.svg"},
@@ -28,7 +28,7 @@ const Main = () => {
   const managerData = [
     {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
     {title: "Библиотека", link: "/cabinet", image: "/images/library.svg"},
-    {title: "Регистратура", link: "/manager/patients", image: "/images/process.svg"},
+    {title: "Пациенты", link: "/patients", image: "/images/process.svg"},
     // {title: "Документооборот", link: "/cabinet", image: "/images/docs.svg"},
     // {title: "Задачи", link: "/cabinet", image: "/images/tasks.svg"},
     // {title: "Новости", link: "/cabinet", image: "/images/news.svg"},
@@ -38,13 +38,13 @@ const Main = () => {
   const therapistData = [
     {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
     {title: "Библиотека", link: "/cabinet", image: "/images/library.svg"},
-    {title: "Пациенты", link: "/doctor/patients", image: "/images/process.svg"},
+    {title: "Пациенты", link: "/patients", image: "/images/process.svg"},
   ]
 
   const adminData = [
     {title: "Кабинет", link: "/cabinet", image: "/images/profile.svg"},
     {title: "Пользователи", link: "/users", image: "/images/library.svg"},
-    {title: "Пациенты", link: "/admin/patients", image: "/images/process.svg"},
+    {title: "Пациенты", link: "/patients", image: "/images/process.svg"},
     {title: "Документооборот", link: "/cabinet", image: "/images/docs.svg"},
     {title: "Задачи", link: "/cabinet", image: "/images/tasks.svg"},
     {title: "Новости", link: "/cabinet", image: "/images/news.svg"},
