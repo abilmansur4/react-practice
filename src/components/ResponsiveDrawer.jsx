@@ -204,7 +204,7 @@ function ResponsiveDrawer(props) {
                 {
                   auth.accessToken && auth.userRole == 1 ? (
                     <>
-                    <ListItem onClick={() => { navigate("/doctor/patients")}} disablePadding>
+                    <ListItem onClick={() => { navigate("/patients")}} disablePadding>
                       <ListItemButton>
                         <ListItemIcon>
                           <AddCardIcon /> 

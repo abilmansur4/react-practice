@@ -67,6 +67,17 @@ const Users = () => {
   const currentItems = searchResults.slice(firstIndex, lastIndex); 
 
   const [userForSearch, setUserForSearch] = useState('');
+
+  const [errors, setErrors] = useState({
+    username: '',
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    iin: '',
+    role: '',
+    password: '',
+  });
   
   const config = {
     headers: {
@@ -84,6 +95,7 @@ const Users = () => {
   const getUsers = () => {
     axios.get("http://localhost:5000/api/users", config)
     .then((response) => {
+      console.log(response);
       const sortedItems = response.data.slice().sort((a, b) => a.id - b.id);
       setUsers(sortedItems);
       setSearchResults(sortedItems);
@@ -232,7 +244,7 @@ const Users = () => {
     user.email = email;
     user.phone = phone;
     user.iin = iin;
-    // user.roles = [role];
+    // user.roles = role;
     user.nameOrganization = nameOrganization;
     user.password = password;
     user.positionId = 1;
@@ -251,7 +263,8 @@ const Users = () => {
       create(user);
       console.log(user);
     } else {
-      // user.roles = {role};
+      // user.roles = [{id: role, usersRoles : {userId: id, roleId: role}}];
+      // user.roles = [parseInt(role)];
       update(user);
       console.log(user);
     }
@@ -290,6 +303,16 @@ const Users = () => {
     setIin('');
     setRole('');
     setNameOrganization('');
+    setErrors({
+      username: '',
+      firstname: '',
+      lastname: '',
+      email: '',
+      phone: '',
+      iin: '',
+      role: '',
+      password: '',
+    });
   }
 
   // Уведомления
@@ -300,6 +323,60 @@ const Users = () => {
 
     setOpen(false);
   };
+
+  // Form validation
+  const validateForm = (event) => {
+    event.preventDefault();
+
+    let errors = {};
+
+    if (!username) {
+      errors.username = "Введите логин пользователя"
+    } 
+
+    if (!firstname) {
+      errors.firstname = "Введите имя пользователя"
+    } 
+
+    if (!lastname) {
+      errors.lastname = "Введите фамилию пользователя"
+    } 
+
+    if (!email) {
+      errors.email = "Введите email"
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = "Неправильный формат email";
+    }
+
+    if (!phone) {
+      errors.phone = "Введите номер телефона пользователя"
+    } 
+
+    if (!iin) {
+      errors.iin = "Введите ИИН пользователя"
+    } 
+
+    if (!role) {
+      errors.role = "Выберите роль пользователя"
+    } 
+
+    if (isEditingUser === false) {
+      if (!password) {
+        errors.password = "Введите пароль пользователя"
+      } else if (password) {
+        if (password.length < 6) {
+          errors.password = "Пароль должен состоят не менее из 6 символов";
+        }
+      }
+    }
+
+    if (Object.keys(errors).length === 0) {
+      handleChange();
+      // console.log('Form submitted');
+    } else {
+      setErrors(errors);
+    }
+  }
 
   useEffect(() => {
 
@@ -422,6 +499,9 @@ const Users = () => {
         handleMouseDownPassword={handleMouseDownPassword}
         button={button}
         setButton={setButton}
+        errors={errors}
+        setErrors={setErrors}
+        validateForm={validateForm}
       />
       <SnackbarComponent 
         open={open} 

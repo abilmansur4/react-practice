@@ -175,9 +175,12 @@ const ManagerEditClient = ({ user }) => {
     }, config)
       .then((response) => {
         if (response.status === 200) {
-          setMessage("Пользователь успешно отредактирован!");
+          setMessage("Данные успешно сохранены!");
           setSeverity("success");
           setOpen(true);
+          setTimeout(() => {
+            navigate('/patients');
+          }, 1500)
         };
       })
       .catch((error) => {

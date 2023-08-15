@@ -13,6 +13,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+  });
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
@@ -27,9 +32,38 @@ const Login = () => {
 
   // const fromPage = location.state?.from?.pathname || "/";
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     // console.log(username, password)
-    auth.login(username, password);
+    let newErrors = {};
+
+    if (!username) {
+      newErrors.username = 'Введите логин';
+    } 
+
+    if (!password) {
+      newErrors.password = 'Введите пароль';
+    }
+
+    if (Object.keys(newErrors).length === 0) {
+      // Вы можете выполнить дополнительную обработку здесь, например, отправку данных на сервер
+      
+      // console.log(response);
+      // try {
+      auth.login(username, password);
+      // } catch (error) {
+      //   console.log(error)
+      // }
+      // console.log('Form submitted:');
+    } else {
+      setErrors(newErrors);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSubmit(event);
+    }
   };
 
   return (
@@ -46,12 +80,24 @@ const Login = () => {
       <Box sx={{ width: 300, padding: 4, "borderRadius": "20px" ,"boxShadow": "0px 4px 35px 0px rgba(0, 0, 0, 0.08)"}}>
         <Stack spacing={2}>
           <Typography variant="h5">Вход</Typography>
-          <TextField size="small" label="Логин" value={username} variant="outlined" onChange={(e) => setUsername(e.target.value)}/>
+          <TextField 
+            size="small" 
+            label="Логин" 
+            value={username} 
+            variant="outlined" 
+            onChange={(e) => setUsername(e.target.value)} 
+            onKeyPress={handleKeyPress}
+            error={!!errors.username}
+            helperText={errors.username}
+          />
           {/* <TextField label="Пароль" value={password} variant="outlined" type="password" onChange={(e) => setPassword(e.target.value)}/> */}
           <TextField
             size="small"
             label='Пароль'
             variant="outlined"
+            onKeyPress={handleKeyPress}
+            error={!!errors.password}
+            helperText={errors.password}
             type={showPassword ? "text" : "password"} // <-- This is where the magic happens
             onChange={(e) => setPassword(e.target.value)}
             InputProps={{ // <-- This is where the toggle button is added.

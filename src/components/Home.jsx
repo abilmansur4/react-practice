@@ -13,7 +13,12 @@ const Home = () => {
 
   useEffect(() => {
     if (location.pathname === '/') {
-      navigate(-1);
+      if (localStorage.getItem('accessToken')) {
+        console.log(location)
+        navigate('/main');
+      } else {
+        navigate('/login')
+      }
     }
   }, [location.pathname])
 
